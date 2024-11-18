@@ -75,7 +75,7 @@ async function setPythonInterpreter(poetryPath: string, poetryPackagePath: strin
 }
 
 function setPythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string, config: IExtensionConfig) {
-    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "Disable") return;
+    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "disable") return;
 
     const packageRelativePath = path.relative(workspaceRoot, packagePath);
     const pythonConfig = vscode.workspace.getConfiguration('python');

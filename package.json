@@ -46,13 +46,11 @@
             "append",
             "disable"
           ],
+          "default": "replace",
           "enumDescriptions": [
             "Replace the existing paths with the new package path",
             "Append package path to the existing paths",
             "Do not update paths on interpreter switch"
-          ],
-          "default": [
-            "replace"
           ],
           "description": "Configure how python.analysis.extraPaths gets updated when extension switches interpreters"
         }

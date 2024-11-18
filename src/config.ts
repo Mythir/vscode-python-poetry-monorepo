@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
 
-export type UpdatePythonAnalysisExtraPathsConfig = "Replace" | "Append" | "Disable";
+export type UpdatePythonAnalysisExtraPathsConfig = "replace" | "append" | "disable";
 
 export interface PoetryMonorepoConfig {
     updatePythonAnalysisExtraPaths: UpdatePythonAnalysisExtraPathsConfig;
