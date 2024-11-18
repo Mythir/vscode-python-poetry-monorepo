@@ -39,10 +39,23 @@
     ],
     "configuration": {
       "properties": {
-        "poetryMonorepo.appendExtraPaths": {
-          "type": "boolean",
-          "default": false,
-          "description": "Option to append the extra path instead of replacing. set true to retail any extraPaths you need"
+        "poetryMonorepo.updatePythonAnalysisExtraPaths": {
+          "type": "string",
+          "enum": [
+            "Replace",
+            "Append",
+            "Disable"
+          ],
+          "enumDescriptions": [
+            "Replace the existing paths with the new package path",
+            "Append package path to the existing paths",
+            "Do not update paths on interpreter switch"
+          ],
+          "default": [
+            "Replace"
+          ],
+          "uniqueItems": true,
+          "description": "Configure how python.analysis.extraPaths gets updated when extension switches interpreters"
         }
       }
     }

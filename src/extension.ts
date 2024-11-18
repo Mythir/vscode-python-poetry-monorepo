@@ -5,6 +5,7 @@ import * as VscodePython from "@vscode/python-extension";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { updatePythonAnalysisExtraPaths } from "./config";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -67,12 +68,20 @@ async function setPythonInterpreter(poetryPath: string, poetryPackagePath: strin
     if (pythonInterpreterPath !== currentInterpreter && fs.existsSync(pythonInterpreterPath)) {
         await pythonExtension.environments.updateActiveEnvironmentPath(pythonInterpreterPath);
 
-        const appendExtraPath = vscode.workspace.getConfiguration('poetryMonorepo').get('appendExtraPaths');
-        if (appendExtraPath) {
-            setExtraPathsAppend(poetryPackagePath, workspaceFolder.uri.fsPath);
-        } else {
-            setExtraPaths(poetryPackagePath, workspaceFolder.uri.fsPath);
+        const updatePythonAnalysisExtraPaths: updatePythonAnalysisExtraPaths = vscode.workspace.getConfiguration('poetryMonorepo').get('updatePythonAnalysisExtraPaths');
+
+        switch (updatePythonAnalysisExtraPaths) {
+            case "Append":
+                setExtraPathsAppend(poetryPackagePath, workspaceFolder.uri.fsPath);
+                break;
+            case "Replace":
+                setExtraPaths(poetryPackagePath, workspaceFolder.uri.fsPath);
+                break;
+            case "Disable":
+                // do nothing
+                break;
         }
+
         vscode.window.showInformationMessage(`Python interpreter and extra path changed.\n\nInterpreter: ${pythonInterpreterPath}.\n\nPath: ${poetryPackagePath}`)
 
         // vscode.workspace.getConfiguration('python').update('defaultInterpreterPath', pythonInterpreterPath).then(_ => {
