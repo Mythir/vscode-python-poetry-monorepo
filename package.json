@@ -42,9 +42,9 @@
         "poetryMonorepo.updatePythonAnalysisExtraPaths": {
           "type": "string",
           "enum": [
-            "Replace",
-            "Append",
-            "Disable"
+            "replace",
+            "append",
+            "disable"
           ],
           "enumDescriptions": [
             "Replace the existing paths with the new package path",
@@ -52,9 +52,8 @@
             "Do not update paths on interpreter switch"
           ],
           "default": [
-            "Replace"
+            "replace"
           ],
-          "uniqueItems": true,
           "description": "Configure how python.analysis.extraPaths gets updated when extension switches interpreters"
         }
       }
