@@ -45,7 +45,7 @@ async function onActiveTextEditorChange(editor: vscode.TextEditor | undefined, p
     const [poetryPath, packageDirPath] = paths;
 
     await setPythonInterpreter(poetryPath, packageDirPath, pythonExtension, workspaceFolder);
-    setPythonAnalysisExtraPaths(packageDirPath, workspaceFolder.uri.fsPath, config);
+    updatePythonAnalysisExtraPaths(packageDirPath, workspaceFolder.uri.fsPath, config);
 }
 
 function FindClosestPyProjectTomlInPath(pythonFile: string, workspaceRoot: string) {
@@ -74,21 +74,18 @@ async function setPythonInterpreter(poetryPath: string, poetryPackagePath: strin
     }
 }
 
-function setPythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string, config: IExtensionConfig) {
+export function updatePythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string, config: IExtensionConfig) {
     if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "disable") return;
 
     const packageRelativePath = path.relative(workspaceRoot, packagePath);
-    const pythonConfig = vscode.workspace.getConfiguration('python');
-
     let extraPaths: string[] = [];
 
     if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "append") {
-        extraPaths = vscode.workspace.getConfiguration('python').get('analysis.extraPaths') || [];
-        extraPaths = extraPaths.filter(path => path !== packageRelativePath)
+        extraPaths = config.python.analysis.extraPaths.filter(path => path !== packageRelativePath)
     }
 
     extraPaths.unshift(packageRelativePath);
-    pythonConfig.update('analysis.extraPaths', extraPaths)
+    config.setPythonAnalysisExtraPaths(extraPaths);
 }
 
 // This method is called when your extension is deactivated

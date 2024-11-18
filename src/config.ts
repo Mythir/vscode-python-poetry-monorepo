@@ -14,26 +14,41 @@ export interface PythonConfig {
 }
 
 export interface IExtensionConfig {
-    poetryMonorepo: PoetryMonorepoConfig;
-    python: PythonConfig;
+    readonly poetryMonorepo: PoetryMonorepoConfig;
+    readonly python: PythonConfig;
+    setPythonAnalysisExtraPaths(paths: string[]): void;
 }
 
 export class ExtensionConfig implements IExtensionConfig {
-    poetryMonorepo: PoetryMonorepoConfig;
-    python: PythonConfig;
+    public poetryMonorepo!: PoetryMonorepoConfig;
+    public python!: PythonConfig;
 
     constructor() {
+        this.fetchPoetryMonorepoConfig();
+        this.fetchPythonConfig();
+    }
+
+    private fetchPoetryMonorepoConfig() {
         const poetryMonorepoConfig = vscode.workspace.getConfiguration('poetryMonorepo');
-        const pythonConfig = vscode.workspace.getConfiguration('python');
 
         this.poetryMonorepo = {
             updatePythonAnalysisExtraPaths: poetryMonorepoConfig.get('updatePythonAnalysisExtraPaths') as UpdatePythonAnalysisExtraPathsConfig,
         }
+}
+
+    private fetchPythonConfig() {
+        const pythonConfig = vscode.workspace.getConfiguration('python');
 
         this.python = {
             analysis: {
                 extraPaths: pythonConfig.get('analysis.extraPaths') || [],
             }
         }
+
+    }
+
+    setPythonAnalysisExtraPaths(paths: string[]){
+        vscode.workspace.getConfiguration('python').update('analysis.extraPaths', paths);
+        this.fetchPythonConfig();
     }
 }
