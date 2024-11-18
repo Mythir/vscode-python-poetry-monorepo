@@ -53,6 +53,16 @@
             "Do not update paths on interpreter switch"
           ],
           "description": "Configure how python.analysis.extraPaths gets updated when extension switches interpreters"
+        },
+        "poetryMonorepo.pytest.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "If enabled, will set PyTest arguments to the Poetry project"
+        },
+        "poetryMonorepo.pytest.setCovConfig": {
+          "type": "boolean",
+          "default": false,
+          "description": "If enabled, will set cov config to use the Poetry pyproject.toml"
         }
       }
     }

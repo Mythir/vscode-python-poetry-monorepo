@@ -46,6 +46,7 @@ async function onActiveTextEditorChange(editor: vscode.TextEditor | undefined, p
 
     await setPythonInterpreter(poetryPath, packageDirPath, pythonExtension, workspaceFolder);
     updatePythonAnalysisExtraPaths(packageDirPath, workspaceFolder.uri.fsPath, config);
+    updatePytestSettings(poetryPath, workspaceFolder.uri.fsPath, config);
 }
 
 function FindClosestPyProjectTomlInPath(pythonFile: string, workspaceRoot: string) {
@@ -86,6 +87,19 @@ export function updatePythonAnalysisExtraPaths(packagePath: string, workspaceRoo
 
     extraPaths.unshift(packageRelativePath);
     config.setPythonAnalysisExtraPaths(extraPaths);
+}
+
+export function updatePytestSettings(poetryPath: string, workspaceRoot: string, config: IExtensionConfig) {
+    if (!config.poetryMonorepo.pytest.enabled) return;
+
+    const packageRelativePath = path.relative(workspaceRoot, poetryPath);
+    const pytestArgs: string[] = [packageRelativePath];
+
+    if (config.poetryMonorepo.pytest.setCovConfig) {
+        pytestArgs.push(`--cov-config=${packageRelativePath}/pyproject.toml`);
+    }
+
+    config.setPytestArgs(pytestArgs);
 }
 
 // This method is called when your extension is deactivated
