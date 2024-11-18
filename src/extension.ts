@@ -82,7 +82,7 @@ function setPythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string,
 
     let extraPaths: string[] = [];
 
-    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "Append") {
+    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "append") {
         extraPaths = vscode.workspace.getConfiguration('python').get('analysis.extraPaths') || [];
         extraPaths = extraPaths.filter(path => path !== packageRelativePath)
     }
