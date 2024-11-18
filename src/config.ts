@@ -1,1 +1,1 @@
-export type updatePythonAnalysisExtraPaths = "Replace" | "Append" | "Disable";
+export type UpdatePythonAnalysisExtraPathsConfig = "Replace" | "Append" | "Disable";
