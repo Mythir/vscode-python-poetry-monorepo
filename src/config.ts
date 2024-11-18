@@ -44,8 +44,8 @@ export class ExtensionConfig implements IExtensionConfig {
         this.poetryMonorepo = {
             updatePythonAnalysisExtraPaths: poetryMonorepoConfig.get('updatePythonAnalysisExtraPaths') as UpdatePythonAnalysisExtraPathsConfig,
             pytest: {
-                enabled: poetryMonorepoConfig.get('updatePytestSettings.enabled') || false,
-                setCovConfig: poetryMonorepoConfig.get('updatePytestSettings.setCovConfig') || false
+                enabled: poetryMonorepoConfig.get('pytest.enabled') || false,
+                setCovConfig: poetryMonorepoConfig.get('pytest.setCovConfig') || false
             }
         }
     }
