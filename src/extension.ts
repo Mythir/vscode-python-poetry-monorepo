@@ -145,13 +145,8 @@ export async function updatePytestSettings(
   if (!config.config.poetryMonorepo.pytest.enabled) return;
 
   const packageRelativePath = path.relative(workspaceRoot, poetryPath);
-  const pytestArgs: string[] = [packageRelativePath];
 
-  if (config.config.poetryMonorepo.pytest.setCovConfig) {
-    pytestArgs.push(`--cov-config=${packageRelativePath}/pyproject.toml`);
-  }
-
-  await config.setPytestArgs(pytestArgs);
+  await config.setPythonTestingWorkingDirectory(packageRelativePath);
 }
 
 // This method is called when your extension is deactivated

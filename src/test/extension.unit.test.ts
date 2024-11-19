@@ -15,9 +15,12 @@ suite("Extension Unit Test Suite", () => {
       this.config = {
         poetryMonorepo: {
           updatePythonAnalysisExtraPaths: "replace",
-          pytest: { enabled: false, setCovConfig: false },
+          pytest: { enabled: false },
         },
-        python: { analysis: { extraPaths: [] }, testing: { pytestArgs: [] } },
+        python: {
+          analysis: { extraPaths: [] },
+          testing: { cwd: "path_test_wd" },
+        },
       };
     }
 
@@ -25,8 +28,8 @@ suite("Extension Unit Test Suite", () => {
       this.config.python.analysis.extraPaths = paths;
     }
 
-    async setPytestArgs(args: string[]) {
-      this.config.python.testing.pytestArgs = args;
+    async setPythonTestingWorkingDirectory(arg: string) {
+      this.config.python.testing.cwd = arg;
     }
   }
 
@@ -38,32 +41,14 @@ suite("Extension Unit Test Suite", () => {
     suite("When enabled", () => {
       setup(() => {
         configService.config.poetryMonorepo.pytest.enabled = true;
-        configService.config.poetryMonorepo.pytest.setCovConfig = true;
       });
 
       test("Should update pytest settings when enabled", () => {
         updatePytestSettings("git/root/src/package", "git/root", configService);
-        assert.deepEqual(configService.config.python.testing.pytestArgs, [
-          "src/package",
-          "--cov-config=src/package/pyproject.toml",
-        ]);
-      });
-
-      suite("When setCovConfig is false", () => {
-        setup(() => {
-          configService.config.poetryMonorepo.pytest.setCovConfig = false;
-        });
-
-        test("Should not set --cov-config when setCovConfig is false", () => {
-          updatePytestSettings(
-            "git/root/src/package",
-            "git/root",
-            configService
-          );
-          assert.deepEqual(configService.config.python.testing.pytestArgs, [
-            "src/package",
-          ]);
-        });
+        assert.deepEqual(
+          configService.config.python.testing.cwd,
+          "src/package"
+        );
       });
     });
 
@@ -72,9 +57,12 @@ suite("Extension Unit Test Suite", () => {
         configService.config.poetryMonorepo.pytest.enabled = false;
       });
 
-      test("Should not update pytest settings when disabled", () => {
+      test("Should not update test settings when disabled", () => {
         updatePytestSettings("git/root/src/package", "git/root", configService);
-        assert.deepEqual(configService.config.python.testing.pytestArgs, []);
+        assert.deepEqual(
+          configService.config.python.testing.cwd,
+          "path_test_wd"
+        );
       });
     });
   });

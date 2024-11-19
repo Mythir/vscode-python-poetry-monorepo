@@ -57,22 +57,28 @@ suite("ConfigService test", () => {
     });
   });
 
-  suite("setPytestArgs()", () => {
-    test("Should set the pytestArgs value", async () => {
+  suite("setPythonTestingWorkingDirectory()", () => {
+    test("Should set the cwd value", async () => {
       let configService = new ConfigService();
-      await configService.setPytestArgs(["src/python/libs/mylib"]);
-      assert.deepEqual(configService.config.python.testing.pytestArgs, [
-        "src/python/libs/mylib",
-      ]);
+      await configService.setPythonTestingWorkingDirectory(
+        "src/python/libs/mylib"
+      );
+      assert.deepEqual(
+        configService.config.python.testing.cwd,
+        "src/python/libs/mylib"
+      );
     });
 
     test("Should store the pytestArgs value for later retrieval", async () => {
       let configService = new ConfigService();
-      await configService.setPytestArgs(["src/python/libs/mylib"]);
+      await configService.setPythonTestingWorkingDirectory(
+        "src/python/libs/mylib"
+      );
       let configService2 = new ConfigService();
-      assert.deepEqual(configService2.config.python.testing.pytestArgs, [
-        "src/python/libs/mylib",
-      ]);
+      assert.deepEqual(
+        configService2.config.python.testing.cwd,
+        "src/python/libs/mylib"
+      );
     });
   });
 });

@@ -7,7 +7,6 @@ export type UpdatePythonAnalysisExtraPathsConfig =
 
 export interface PoetryMonorepoPytestConfig {
   enabled: boolean;
-  setCovConfig: boolean;
 }
 
 export interface PoetryMonorepoConfig {
@@ -20,7 +19,7 @@ export interface PythonConfig {
     extraPaths: string[];
   };
   testing: {
-    pytestArgs: string[];
+    cwd: string;
   };
 }
 
@@ -32,7 +31,7 @@ export interface ExtensionConfig {
 export interface IConfigService {
   readonly config: ExtensionConfig;
   setPythonAnalysisExtraPaths(paths: string[]): Promise<void>;
-  setPytestArgs(pytestArgs: string[]): Promise<void>;
+  setPythonTestingWorkingDirectory(pytestArgs: string): Promise<void>;
 }
 
 export function extensionConfigDefaults(): ExtensionConfig {
@@ -41,7 +40,6 @@ export function extensionConfigDefaults(): ExtensionConfig {
       updatePythonAnalysisExtraPaths: "replace",
       pytest: {
         enabled: false,
-        setCovConfig: false,
       },
     },
     python: {
@@ -49,7 +47,7 @@ export function extensionConfigDefaults(): ExtensionConfig {
         extraPaths: [],
       },
       testing: {
-        pytestArgs: [],
+        cwd: "",
       },
     },
   };
@@ -90,7 +88,7 @@ export class ConfigService implements IConfigService {
     await this.updatePythonConfig("analysis.extraPaths", paths);
   }
 
-  async setPytestArgs(pytestArgs: string[]) {
-    await this.updatePythonConfig("testing.pytestArgs", pytestArgs);
+  async setPythonTestingWorkingDirectory(path: string) {
+    await this.updatePythonConfig("testing.cwd", path);
   }
 }

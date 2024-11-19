@@ -14,10 +14,7 @@
         "src/python/libs/mylib",
         "src/python/libs/anotherlib",
     ],
-    "python.testing.pytestArgs": [
-        "src/python/myapplication",
-        "--cov-config=src/python/myapplication/pyproject.toml"
-    ],
+    "python.testing.cwd": "src/python/myapp",
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
     "poetryMonorepo.pytest.enabled": true,
