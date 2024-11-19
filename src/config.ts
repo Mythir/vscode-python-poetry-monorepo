@@ -22,18 +22,38 @@ export interface PythonConfig {
     };
 }
 
-export interface IExtensionConfig {
-    readonly poetryMonorepo: PoetryMonorepoConfig;
-    readonly python: PythonConfig;
+export interface ExtensionConfig {
+    poetryMonorepo: PoetryMonorepoConfig;
+    python: PythonConfig;
+}
+
+export interface IConfigService {
+    readonly config: ExtensionConfig;
     setPythonAnalysisExtraPaths(paths: string[]): void;
     setPytestArgs(pytestArgs: string[]): void;
 }
 
-export class ExtensionConfig implements IExtensionConfig {
-    public poetryMonorepo!: PoetryMonorepoConfig;
-    public python!: PythonConfig;
+export class ConfigService implements IConfigService {
+    public config!: ExtensionConfig;
 
     constructor() {
+        this.config = {
+            poetryMonorepo: {
+                updatePythonAnalysisExtraPaths: "replace",
+                pytest: {
+                    enabled: false,
+                    setCovConfig: false
+                }
+            },
+            python: {
+                analysis: {
+                    extraPaths: []
+                },
+                testing: {
+                    pytestArgs: []
+                }
+            }
+        }
         this.fetchPoetryMonorepoConfig();
         this.fetchPythonConfig();
     }
@@ -41,7 +61,7 @@ export class ExtensionConfig implements IExtensionConfig {
     private fetchPoetryMonorepoConfig() {
         const poetryMonorepoConfig = vscode.workspace.getConfiguration('poetryMonorepo');
 
-        this.poetryMonorepo = {
+        this.config.poetryMonorepo = {
             updatePythonAnalysisExtraPaths: poetryMonorepoConfig.get('updatePythonAnalysisExtraPaths') as UpdatePythonAnalysisExtraPathsConfig,
             pytest: {
                 enabled: poetryMonorepoConfig.get('pytest.enabled') || false,
@@ -53,7 +73,7 @@ export class ExtensionConfig implements IExtensionConfig {
     private fetchPythonConfig() {
         const pythonConfig = vscode.workspace.getConfiguration('python');
 
-        this.python = {
+        this.config.python = {
             analysis: {
                 extraPaths: pythonConfig.get('analysis.extraPaths') || [],
             },

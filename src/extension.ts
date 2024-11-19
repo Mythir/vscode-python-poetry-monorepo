@@ -5,8 +5,8 @@ import * as VscodePython from "@vscode/python-extension";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { IExtensionConfig, UpdatePythonAnalysisExtraPathsConfig } from "./config";
-import { ExtensionConfig } from "./config";
+import { IConfigService, UpdatePythonAnalysisExtraPathsConfig } from "./config";
+import { ConfigService } from "./config";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -35,7 +35,7 @@ async function onActiveTextEditorChange(editor: vscode.TextEditor | undefined, p
 
     const pythonFile = editor.document.uri.fsPath;
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(pythonFile));
-    const config = new ExtensionConfig();
+    const config = new ConfigService();
 
     if (!workspaceFolder) return;
 
@@ -75,27 +75,27 @@ async function setPythonInterpreter(poetryPath: string, poetryPackagePath: strin
     }
 }
 
-export function updatePythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string, config: IExtensionConfig) {
-    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "disable") return;
+export function updatePythonAnalysisExtraPaths(packagePath: string, workspaceRoot: string, config: IConfigService) {
+    if (config.config.poetryMonorepo.updatePythonAnalysisExtraPaths === "disable") return;
 
     const packageRelativePath = path.relative(workspaceRoot, packagePath);
     let extraPaths: string[] = [];
 
-    if (config.poetryMonorepo.updatePythonAnalysisExtraPaths === "append") {
-        extraPaths = config.python.analysis.extraPaths.filter(path => path !== packageRelativePath)
+    if (config.config.poetryMonorepo.updatePythonAnalysisExtraPaths === "append") {
+        extraPaths = config.config.python.analysis.extraPaths.filter(path => path !== packageRelativePath)
     }
 
     extraPaths.unshift(packageRelativePath);
     config.setPythonAnalysisExtraPaths(extraPaths);
 }
 
-export function updatePytestSettings(poetryPath: string, workspaceRoot: string, config: IExtensionConfig) {
-    if (!config.poetryMonorepo.pytest.enabled) return;
+export function updatePytestSettings(poetryPath: string, workspaceRoot: string, config: IConfigService) {
+    if (!config.config.poetryMonorepo.pytest.enabled) return;
 
     const packageRelativePath = path.relative(workspaceRoot, poetryPath);
     const pytestArgs: string[] = [packageRelativePath];
 
-    if (config.poetryMonorepo.pytest.setCovConfig) {
+    if (config.config.poetryMonorepo.pytest.setCovConfig) {
         pytestArgs.push(`--cov-config=${packageRelativePath}/pyproject.toml`);
     }
 
