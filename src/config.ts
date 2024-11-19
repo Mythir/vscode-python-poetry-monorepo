@@ -33,27 +33,32 @@ export interface IConfigService {
     setPytestArgs(pytestArgs: string[]): void;
 }
 
+export function extensionConfigDefaults(): ExtensionConfig {
+    return {
+        poetryMonorepo: {
+            updatePythonAnalysisExtraPaths: "replace",
+            pytest: {
+                enabled: false,
+                setCovConfig: false
+            }
+        },
+        python: {
+            analysis: {
+                extraPaths: []
+            },
+            testing: {
+                pytestArgs: []
+            }
+        }
+    }
+}
+
+
 export class ConfigService implements IConfigService {
     public config!: ExtensionConfig;
 
     constructor() {
-        this.config = {
-            poetryMonorepo: {
-                updatePythonAnalysisExtraPaths: "replace",
-                pytest: {
-                    enabled: false,
-                    setCovConfig: false
-                }
-            },
-            python: {
-                analysis: {
-                    extraPaths: []
-                },
-                testing: {
-                    pytestArgs: []
-                }
-            }
-        }
+        this.config = extensionConfigDefaults();
         this.fetchPoetryMonorepoConfig();
         this.fetchPythonConfig();
     }

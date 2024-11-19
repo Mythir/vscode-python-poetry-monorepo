@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { ExtensionConfig, IConfigService, PoetryMonorepoConfig, PythonConfig } from '../config';
+import { ExtensionConfig, IConfigService } from '../config';
 import { updatePytestSettings, updatePythonAnalysisExtraPaths } from '../extension';
 
 suite('Extension Unit Test Suite', () => {
