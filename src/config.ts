@@ -60,41 +60,30 @@ export class ConfigService implements IConfigService {
 
   constructor() {
     this.config = extensionConfigDefaults();
-    this.fetchPoetryMonorepoConfig();
-    this.fetchPythonConfig();
+    this.fetchConfig(this.config);
   }
 
-  private fetchPoetryMonorepoConfig() {
-    const poetryMonorepoConfig =
-      vscode.workspace.getConfiguration("poetryMonorepo");
-
-    this.config.poetryMonorepo = {
-      updatePythonAnalysisExtraPaths: poetryMonorepoConfig.get(
-        "updatePythonAnalysisExtraPaths"
-      ) as UpdatePythonAnalysisExtraPathsConfig,
-      pytest: {
-        enabled: poetryMonorepoConfig.get("pytest.enabled") || false,
-        setCovConfig: poetryMonorepoConfig.get("pytest.setCovConfig") || false,
-      },
-    };
-  }
-
-  private fetchPythonConfig() {
-    const pythonConfig = vscode.workspace.getConfiguration("python");
-
-    this.config.python = {
-      analysis: {
-        extraPaths: pythonConfig.get("analysis.extraPaths") || [],
-      },
-      testing: {
-        pytestArgs: pythonConfig.get("testing.pytestArgs") || [],
-      },
-    };
+  private fetchConfig(config: any, path: string[] = []) {
+    for (const [key, value] of Object.entries(config)) {
+      let newPath = [...path, key];
+      if (
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        value !== null
+      ) {
+        this.fetchConfig(value, newPath);
+      } else {
+        config[key] =
+          vscode.workspace
+            .getConfiguration(newPath[0])
+            .get(newPath.slice(1).join(".")) ?? value;
+      }
+    }
   }
 
   private async updatePythonConfig(path: string, value: any) {
     await vscode.workspace.getConfiguration("python").update(path, value);
-    this.fetchPythonConfig();
+    this.fetchConfig(this.config);
   }
 
   async setPythonAnalysisExtraPaths(paths: string[]) {
