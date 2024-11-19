@@ -59,12 +59,7 @@
         "poetryMonorepo.pytest.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "If enabled, will set PyTest arguments to the Poetry project"
-        },
-        "poetryMonorepo.pytest.setCovConfig": {
-          "type": "boolean",
-          "default": false,
-          "description": "If enabled, will set cov config to use the Poetry pyproject.toml"
+          "description": "If enabled, will set testing working directory to the Poetry project"
         }
       }
     }
