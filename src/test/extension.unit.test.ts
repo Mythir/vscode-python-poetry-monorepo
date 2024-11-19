@@ -21,11 +21,11 @@ suite("Extension Unit Test Suite", () => {
       };
     }
 
-    setPythonAnalysisExtraPaths(paths: string[]): void {
+    async setPythonAnalysisExtraPaths(paths: string[]) {
       this.config.python.analysis.extraPaths = paths;
     }
 
-    setPytestArgs(args: string[]): void {
+    async setPytestArgs(args: string[]) {
       this.config.python.testing.pytestArgs = args;
     }
   }

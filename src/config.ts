@@ -31,8 +31,8 @@ export interface ExtensionConfig {
 
 export interface IConfigService {
   readonly config: ExtensionConfig;
-  setPythonAnalysisExtraPaths(paths: string[]): void;
-  setPytestArgs(pytestArgs: string[]): void;
+  setPythonAnalysisExtraPaths(paths: string[]): Promise<void>;
+  setPytestArgs(pytestArgs: string[]): Promise<void>;
 }
 
 export function extensionConfigDefaults(): ExtensionConfig {
@@ -92,16 +92,16 @@ export class ConfigService implements IConfigService {
     };
   }
 
-  private updatePythonConfig(path: string, value: any) {
-    vscode.workspace.getConfiguration("python").update(path, value);
+  private async updatePythonConfig(path: string, value: any) {
+    await vscode.workspace.getConfiguration("python").update(path, value);
     this.fetchPythonConfig();
   }
 
-  setPythonAnalysisExtraPaths(paths: string[]) {
-    this.updatePythonConfig("analysis.extraPaths", paths);
+  async setPythonAnalysisExtraPaths(paths: string[]) {
+    await this.updatePythonConfig("analysis.extraPaths", paths);
   }
 
-  setPytestArgs(pytestArgs: string[]) {
-    this.updatePythonConfig("testing.pytestArgs", pytestArgs);
+  async setPytestArgs(pytestArgs: string[]) {
+    await this.updatePythonConfig("testing.pytestArgs", pytestArgs);
   }
 }

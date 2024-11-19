@@ -1,8 +1,21 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { ConfigService } from "../config";
+import { readFileSync, writeFileSync } from "fs";
 
 suite("ConfigService test", () => {
+  const configPath = "src/test/testWorkspace/.vscode/settings.json";
+  let originalConfigJson: string;
+
+  setup(() => {
+    // Save settings.json so that we can recover after tests
+    originalConfigJson = readFileSync(configPath, "utf8");
+  });
+
+  teardown(() => {
+    writeFileSync(configPath, originalConfigJson);
+  });
+
   suite("On instantiation", () => {
     test("Should fetch configured values from file", () => {
       let configService = new ConfigService();
@@ -22,19 +35,42 @@ suite("ConfigService test", () => {
   });
 
   suite("setPythonAnalysisExtraPaths()", () => {
-    test("Should set the extraPaths value", () => {
+    test("Should set the extraPaths value", async () => {
       let configService = new ConfigService();
-      configService.setPythonAnalysisExtraPaths(["src/python/libs/mylib"]);
+      await configService.setPythonAnalysisExtraPaths([
+        "src/python/libs/mylib",
+      ]);
       assert.deepEqual(configService.config.python.analysis.extraPaths, [
         "src/python/libs/mylib",
       ]);
     });
 
-    test("Should store the extraPaths value for later retrieval", () => {
+    test("Should store the extraPaths value for later retrieval", async () => {
       let configService = new ConfigService();
-      configService.setPythonAnalysisExtraPaths(["src/python/libs/mylib"]);
+      await configService.setPythonAnalysisExtraPaths([
+        "src/python/libs/mylib",
+      ]);
       let configService2 = new ConfigService();
       assert.deepEqual(configService2.config.python.analysis.extraPaths, [
+        "src/python/libs/mylib",
+      ]);
+    });
+  });
+
+  suite("setPytestArgs()", () => {
+    test("Should set the pytestArgs value", async () => {
+      let configService = new ConfigService();
+      await configService.setPytestArgs(["src/python/libs/mylib"]);
+      assert.deepEqual(configService.config.python.testing.pytestArgs, [
+        "src/python/libs/mylib",
+      ]);
+    });
+
+    test("Should store the pytestArgs value for later retrieval", async () => {
+      let configService = new ConfigService();
+      await configService.setPytestArgs(["src/python/libs/mylib"]);
+      let configService2 = new ConfigService();
+      assert.deepEqual(configService2.config.python.testing.pytestArgs, [
         "src/python/libs/mylib",
       ]);
     });

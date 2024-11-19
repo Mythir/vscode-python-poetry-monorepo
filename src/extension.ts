@@ -114,7 +114,7 @@ async function setPythonInterpreter(
   }
 }
 
-export function updatePythonAnalysisExtraPaths(
+export async function updatePythonAnalysisExtraPaths(
   packagePath: string,
   workspaceRoot: string,
   config: IConfigService
@@ -134,10 +134,10 @@ export function updatePythonAnalysisExtraPaths(
   }
 
   extraPaths.unshift(packageRelativePath);
-  config.setPythonAnalysisExtraPaths(extraPaths);
+  await config.setPythonAnalysisExtraPaths(extraPaths);
 }
 
-export function updatePytestSettings(
+export async function updatePytestSettings(
   poetryPath: string,
   workspaceRoot: string,
   config: IConfigService
@@ -151,7 +151,7 @@ export function updatePytestSettings(
     pytestArgs.push(`--cov-config=${packageRelativePath}/pyproject.toml`);
   }
 
-  config.setPytestArgs(pytestArgs);
+  await config.setPytestArgs(pytestArgs);
 }
 
 // This method is called when your extension is deactivated
